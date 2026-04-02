@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fraud Detection E2E Dashboard</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 24px;
+        line-height: 1.5;
+    }
+    .header {
+        text-align: center;
+        margin-bottom: 32px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #334155;
+    }
+    .header h1 { font-size: 28px; color: #f8fafc; margin-bottom: 4px; }
+    .header .subtitle { color: #94a3b8; font-size: 14px; }
+    .header .timestamp { color: #64748b; font-size: 12px; margin-top: 8px; }
+    .section { margin-bottom: 32px; }
+    .section h2 {
+        font-size: 18px; color: #f8fafc; margin-bottom: 16px;
+        padding-bottom: 8px; border-bottom: 1px solid #1e293b;
+    }
+    .grid { display: grid; gap: 16px; }
+    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); }
+    .card {
+        background: #1e293b;
+        border-radius: 8px;
+        padding: 20px;
+    }
+    .threshold-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .card-icon { font-size: 28px; font-weight: bold; }
+    .card-title { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+    .card-value { font-size: 24px; font-weight: 700; color: #f8fafc; }
+    .card-status { font-size: 12px; font-weight: 600; }
+
+    .stat-card .card-value { font-size: 32px; }
+    .stat-card .card-label { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; font-size: 12px; color: #94a3b8; text-transform: uppercase;
+          letter-spacing: 0.5px; padding: 8px 12px; border-bottom: 1px solid #334155; }
+    td { padding: 10px 12px; border-bottom: 1px solid #1e293b; font-size: 14px; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+
+    .bar-container {
+        background: #334155;
+        border-radius: 4px;
+        height: 20px;
+        width: 100%;
+        overflow: hidden;
+    }
+    .bar {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+
+    .confusion-grid {
+        display: grid;
+        grid-template-columns: 100px 1fr 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 4px;
+        max-width: 360px;
+    }
+    .confusion-header {
+        font-size: 11px; color: #94a3b8; text-align: center;
+        padding: 8px; text-transform: uppercase;
+    }
+    .confusion-cell {
+        padding: 16px;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 20px;
+    }
+    .confusion-label {
+        font-size: 10px; font-weight: 400; color: #94a3b8;
+        display: block; margin-top: 4px;
+    }
+    .tp { background: #166534; color: #bbf7d0; }
+    .fp { background: #991b1b; color: #fecaca; }
+    .fn { background: #92400e; color: #fde68a; }
+    .tn { background: #1e3a5f; color: #bfdbfe; }
+
+    .routing-bar {
+        display: flex;
+        height: 36px;
+        border-radius: 6px;
+        overflow: hidden;
+        margin-bottom: 12px;
+    }
+    .routing-bar div { display: flex; align-items: center; justify-content: center;
+                        font-size: 12px; font-weight: 600; color: #fff; }
+    .routing-legend { display: flex; gap: 20px; flex-wrap: wrap; }
+    .routing-legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+    .routing-legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+    .cost-row { display: flex; justify-content: space-between; padding: 8px 0;
+                 border-bottom: 1px solid #1e293b; }
+    .cost-row:last-child { border-bottom: none; }
+    .cost-label { color: #94a3b8; }
+    .cost-value { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .overall-pass { text-align: center; padding: 16px; border-radius: 8px;
+                     font-weight: 700; font-size: 16px; }
+</style>
+</head>
+<body>
+    <div class="header">
+        <h1>Fraud Detection Agent &mdash; E2E Results</h1>
+        <div class="subtitle">
+            181 transactions &bull; 7 fraud labels &bull; 14 AML-injected users
+        </div>
+        <div class="timestamp">Generated: 2026-04-01 05:34:54 UTC</div>
+    </div>
+
+    <!-- Quality Thresholds -->
+    <div class="section">
+        <h2>Quality Thresholds</h2>
+        <div class="grid grid-4">
+        <div class="card threshold-card" style="border-left: 4px solid #22c55e;">
+            <div class="card-icon" style="color: #22c55e;">&#10003;</div>
+            <div class="card-body">
+                <div class="card-title">Fraud F1 Score</div>
+                <div class="card-value">82.3%</div>
+                <div class="card-status" style="color: #22c55e;">PASS (&ge; 70%)</div>
+            </div>
+        </div>
+        <div class="card threshold-card" style="border-left: 4px solid #22c55e;">
+            <div class="card-icon" style="color: #22c55e;">&#10003;</div>
+            <div class="card-body">
+                <div class="card-title">Escalation Rate</div>
+                <div class="card-value">0.0%</div>
+                <div class="card-status" style="color: #22c55e;">PASS (&le; 10%)</div>
+            </div>
+        </div>
+        <div class="card threshold-card" style="border-left: 4px solid #22c55e;">
+            <div class="card-icon" style="color: #22c55e;">&#10003;</div>
+            <div class="card-body">
+                <div class="card-title">False Positive Rate</div>
+                <div class="card-value">2.2%</div>
+                <div class="card-status" style="color: #22c55e;">PASS (&le; 5%)</div>
+            </div>
+        </div>
+        <div class="card threshold-card" style="border-left: 4px solid #22c55e;">
+            <div class="card-icon" style="color: #22c55e;">&#10003;</div>
+            <div class="card-body">
+                <div class="card-title">AML Structuring Recall</div>
+                <div class="card-value">100.0%</div>
+                <div class="card-status" style="color: #22c55e;">PASS (&ge; 60%)</div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Fraud Detection -->
+    <div class="section">
+        <h2>Fraud Detection Performance</h2>
+        <div class="grid grid-3">
+            <div class="card stat-card">
+                <div class="card-title">Precision</div>
+                <div class="card-value">70.0%</div>
+                <div class="card-label">Of blocked transactions, how many were truly fraud</div>
+            </div>
+            <div class="card stat-card">
+                <div class="card-title">Recall</div>
+                <div class="card-value">100.0%</div>
+                <div class="card-label">Of actual fraud, how many were caught</div>
+            </div>
+            <div class="card stat-card">
+                <div class="card-title">F1 Score</div>
+                <div class="card-value">82.3%</div>
+                <div class="card-label">Harmonic mean of precision and recall</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confusion Matrix + Routing -->
+    <div class="section">
+        <div class="grid grid-2">
+            <div class="card">
+                <div class="card-title" style="margin-bottom: 16px;">Confusion Matrix</div>
+                <div class="confusion-grid">
+                    <div></div>
+                    <div class="confusion-header">Predicted Fraud</div>
+                    <div class="confusion-header">Predicted Legit</div>
+                    <div class="confusion-header" style="text-align: right;">Actual Fraud</div>
+                    <div class="confusion-cell tp">7<span class="confusion-label">True Pos</span></div>
+                    <div class="confusion-cell fn">0<span class="confusion-label">False Neg</span></div>
+                    <div class="confusion-header" style="text-align: right;">Actual Legit</div>
+                    <div class="confusion-cell fp">3<span class="confusion-label">False Pos</span></div>
+                    <div class="confusion-cell tn">133<span class="confusion-label">True Neg</span></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title" style="margin-bottom: 16px;">Routing Breakdown</div>
+                <div class="routing-bar">
+                    <div style="width: 73.48%; background: #22c55e;">73.5%</div>
+                    <div style="width: 0.0%; background: #f59e0b;">0.0%</div>
+                    <div style="width: 26.52%; background: #ef4444;">26.5%</div>
+                </div>
+                <div class="routing-legend">
+                    <div class="routing-legend-item">
+                        <div class="routing-legend-dot" style="background: #22c55e;"></div>
+                        Approved (133)
+                    </div>
+                    <div class="routing-legend-item">
+                        <div class="routing-legend-dot" style="background: #f59e0b;"></div>
+                        Escalated (0)
+                    </div>
+                    <div class="routing-legend-item">
+                        <div class="routing-legend-dot" style="background: #ef4444;"></div>
+                        Blocked (48)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AML Detection -->
+    <div class="section">
+        <h2>AML Detection by Typology</h2>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 180px;">Typology</th>
+                        <th>Recall</th>
+                        <th style="width: 80px; text-align: right;">Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+            <tr>
+                <td>Structuring</td>
+                <td>
+                    <div class="bar-container">
+                        <div class="bar" style="width: 100.0%; background: #22c55e;"></div>
+                    </div>
+                </td>
+                <td class="num">100.0%</td>
+            </tr>
+            <tr>
+                <td>Smurfing</td>
+                <td>
+                    <div class="bar-container">
+                        <div class="bar" style="width: 0.0%; background: #ef4444;"></div>
+                    </div>
+                </td>
+                <td class="num">0.0%</td>
+            </tr>
+            <tr>
+                <td>Layering</td>
+                <td>
+                    <div class="bar-container">
+                        <div class="bar" style="width: 66.67%; background: #22c55e;"></div>
+                    </div>
+                </td>
+                <td class="num">66.7%</td>
+            </tr>
+            <tr>
+                <td>Round-Tripping</td>
+                <td>
+                    <div class="bar-container">
+                        <div class="bar" style="width: 0.0%; background: #ef4444;"></div>
+                    </div>
+                </td>
+                <td class="num">0.0%</td>
+            </tr>
+            <tr>
+                <td>Profile Mismatch</td>
+                <td>
+                    <div class="bar-container">
+                        <div class="bar" style="width: 0.0%; background: #ef4444;"></div>
+                    </div>
+                </td>
+                <td class="num">0.0%</td>
+            </tr>
+                </tbody>
+            </table>
+            <div style="margin-top: 16px; font-size: 13px; color: #94a3b8;">
+                Overall AML recall: <strong style="color: #f8fafc;">35.7%</strong>
+                &bull; Investigations opened: <strong style="color: #f8fafc;">7</strong>
+                &bull; Correct matches: <strong style="color: #f8fafc;">5/14</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cost -->
+    <div class="section">
+        <h2>Cost &amp; Token Usage</h2>
+        <div class="card" style="max-width: 400px;">
+            <div class="cost-row">
+                <span class="cost-label">Total tokens</span>
+                <span class="cost-value">213,465</span>
+            </div>
+            <div class="cost-row">
+                <span class="cost-label">Estimated cost</span>
+                <span class="cost-value">$0.85</span>
+            </div>
+            <div class="cost-row">
+                <span class="cost-label">Avg tokens / transaction</span>
+                <span class="cost-value">1,179</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

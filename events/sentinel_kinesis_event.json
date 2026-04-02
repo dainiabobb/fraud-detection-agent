@@ -1,0 +1,52 @@
+{
+  "Records": [
+    {
+      "kinesis": {
+        "kinesisSchemaVersion": "1.0",
+        "partitionKey": "user-123",
+        "sequenceNumber": "49640912821178817833517986466168945147169041423869067266",
+        "data": "eyJ0cmFuc2FjdGlvbl9pZCI6ICJ0eG4tMDAxLW5vcm1hbCIsICJ1c2VyX2lkIjogInVzZXItMTIzIiwgImFtb3VudCI6IDQ1Ljk5LCAibWVyY2hhbnRfY2F0ZWdvcnkiOiAiR3JvY2VyaWVzIiwgIm1lcmNoYW50X25hbWUiOiAiV2hvbGUgRm9vZHMgTWFya2V0IiwgIm1lcmNoYW50X2NpdHkiOiAiRGFsbGFzIiwgIm1lcmNoYW50X3N0YXRlIjogIlRYIiwgIm1lcmNoYW50X2NvdW50cnkiOiAiVVMiLCAiY2hhbm5lbCI6ICJvbmxpbmUiLCAidGltZXN0YW1wIjogIjIwMjYtMDMtMzFUMTQ6MjM6MDVaIiwgImRldmljZV9pZCI6ICJkZXYtYWJjLTEyMyIsICJpcF9hZGRyZXNzIjogIjc2LjEyMy40NS42NyIsICJjdXJyZW5jeSI6ICJVU0QifQ==",
+        "approximateArrivalTimestamp": 1743430985.0
+      },
+      "eventSource": "aws:kinesis",
+      "eventVersion": "1.0",
+      "eventID": "shardId-000000000000:49640912821178817833517986466168945147169041423869067266",
+      "eventName": "aws:kinesis:record",
+      "invokeIdentityArn": "arn:aws:iam::123456789012:role/fraud-sentinel-role",
+      "awsRegion": "us-east-1",
+      "eventSourceARN": "arn:aws:kinesis:us-east-1:123456789012:stream/fraud-transactions"
+    },
+    {
+      "kinesis": {
+        "kinesisSchemaVersion": "1.0",
+        "partitionKey": "user-456",
+        "sequenceNumber": "49640912821178817833517986466168945147169041423869067267",
+        "data": "eyJ0cmFuc2FjdGlvbl9pZCI6ICJ0eG4tMDAyLXN1c3BpY2lvdXMiLCAidXNlcl9pZCI6ICJ1c2VyLTQ1NiIsICJhbW91bnQiOiA5MjAwLjAsICJtZXJjaGFudF9jYXRlZ29yeSI6ICJXaXJlIFRyYW5zZmVyIiwgIm1lcmNoYW50X25hbWUiOiAiSW50ZXJuYXRpb25hbCBXaXJlIFNlcnZpY2VzIiwgIm1lcmNoYW50X2NpdHkiOiAiTWlhbWkiLCAibWVyY2hhbnRfc3RhdGUiOiAiRkwiLCAibWVyY2hhbnRfY291bnRyeSI6ICJVUyIsICJjaGFubmVsIjogIm9ubGluZSIsICJ0aW1lc3RhbXAiOiAiMjAyNi0wMy0zMVQxNDozMToxMloiLCAiZGV2aWNlX2lkIjogImRldi14eXotNDU2IiwgImlwX2FkZHJlc3MiOiAiMTc0LjU1Ljg2LjkyIiwgImN1cnJlbmN5IjogIlVTRCJ9",
+        "approximateArrivalTimestamp": 1743431472.0
+      },
+      "eventSource": "aws:kinesis",
+      "eventVersion": "1.0",
+      "eventID": "shardId-000000000000:49640912821178817833517986466168945147169041423869067267",
+      "eventName": "aws:kinesis:record",
+      "invokeIdentityArn": "arn:aws:iam::123456789012:role/fraud-sentinel-role",
+      "awsRegion": "us-east-1",
+      "eventSourceARN": "arn:aws:kinesis:us-east-1:123456789012:stream/fraud-transactions"
+    },
+    {
+      "kinesis": {
+        "kinesisSchemaVersion": "1.0",
+        "partitionKey": "user-789",
+        "sequenceNumber": "49640912821178817833517986466168945147169041423869067268",
+        "data": "eyJ0cmFuc2FjdGlvbl9pZCI6ICJ0eG4tMDAzLWZyYXVkIiwgInVzZXJfaWQiOiAidXNlci03ODkiLCAiYW1vdW50IjogMjUwMC4wLCAibWVyY2hhbnRfY2F0ZWdvcnkiOiAiRWxlY3Ryb25pY3MiLCAibWVyY2hhbnRfbmFtZSI6ICJHbG9iYWwgRWxlY3Ryb25pY3MgTHRkIiwgIm1lcmNoYW50X2NpdHkiOiAiTGFnb3MiLCAibWVyY2hhbnRfc3RhdGUiOiBudWxsLCAibWVyY2hhbnRfY291bnRyeSI6ICJORyIsICJjaGFubmVsIjogIm1vYmlsZSIsICJ0aW1lc3RhbXAiOiAiMjAyNi0wMy0zMVQwMjoxNzo0OFoiLCAiZGV2aWNlX2lkIjogImRldi1uZXctOTk5IiwgImlwX2FkZHJlc3MiOiAiMTk3LjIxMC41NC4zMyIsICJjdXJyZW5jeSI6ICJVU0QifQ==",
+        "approximateArrivalTimestamp": 1743431868.0
+      },
+      "eventSource": "aws:kinesis",
+      "eventVersion": "1.0",
+      "eventID": "shardId-000000000000:49640912821178817833517986466168945147169041423869067268",
+      "eventName": "aws:kinesis:record",
+      "invokeIdentityArn": "arn:aws:iam::123456789012:role/fraud-sentinel-role",
+      "awsRegion": "us-east-1",
+      "eventSourceARN": "arn:aws:kinesis:us-east-1:123456789012:stream/fraud-transactions"
+    }
+  ]
+}

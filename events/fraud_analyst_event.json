@@ -1,0 +1,103 @@
+{
+  "transaction": {
+    "transaction_id": "txn-002-suspicious",
+    "user_id": "user-456",
+    "amount": 9200.0,
+    "merchant_category": "Wire Transfer",
+    "merchant_name": "International Wire Services",
+    "merchant_city": "Miami",
+    "merchant_state": "FL",
+    "merchant_country": "US",
+    "channel": "online",
+    "timestamp": "2026-03-31T14:31:12Z",
+    "device_id": "dev-xyz-456",
+    "ip_address": "174.55.86.92",
+    "currency": "USD"
+  },
+  "persona": {
+    "user_id": "user-456",
+    "geo_footprint": [
+      {"city": "New York", "state": "NY", "frequency": 0.72},
+      {"city": "Chicago", "state": "IL", "frequency": 0.15},
+      {"city": "Los Angeles", "state": "CA", "frequency": 0.08}
+    ],
+    "category_anchors": [
+      {"category": "Hotels", "avg_amount": 320.0, "frequency": "weekly", "std_deviation": 110.0},
+      {"category": "Restaurants", "avg_amount": 85.0, "frequency": "daily", "std_deviation": 45.0},
+      {"category": "Airlines", "avg_amount": 620.0, "frequency": "monthly", "std_deviation": 200.0}
+    ],
+    "velocity": {
+      "daily_txn_count": 6.8,
+      "daily_spend_amount": 780.0,
+      "max_single_txn": 1200.0,
+      "hourly_burst_limit": 4
+    },
+    "anomaly_history": {
+      "false_positive_triggers": ["travel-to-chicago", "large-hotel-purchase"],
+      "confirmed_fraud_count": 0
+    },
+    "ip_footprint": [
+      {"region": "New York City, NY", "frequency": 0.70, "typical_asn": "AS7922 Comcast"},
+      {"region": "Chicago, IL", "frequency": 0.14, "typical_asn": "AS7018 AT&T"}
+    ],
+    "temporal_profile": {
+      "active_hours": [6, 23],
+      "peak_hour": 14,
+      "weekend_ratio": 0.35,
+      "timezone_estimate": "America/New_York"
+    },
+    "aml_profile": {
+      "deposit_pattern": {
+        "avg_amount": 4200.0,
+        "pct_near_threshold": 0.04
+      },
+      "transfer_pattern": {
+        "avg_count": 8,
+        "unique_counterparties": 22,
+        "pct_high_risk_jurisdictions": 0.0
+      },
+      "round_trip_score": 0.0,
+      "economic_profile_match": true,
+      "typology_flags": []
+    }
+  },
+  "similar_transactions": [
+    {
+      "transaction_id": "txn-hist-001",
+      "user_id": "user-456",
+      "amount": 8750.0,
+      "merchant_category": "Wire Transfer",
+      "merchant_city": "Miami",
+      "merchant_country": "US",
+      "channel": "online",
+      "timestamp": "2026-03-10T11:14:22Z",
+      "verdict": "ESCALATED",
+      "cosine_similarity": 0.91
+    },
+    {
+      "transaction_id": "txn-hist-002",
+      "user_id": "user-456",
+      "amount": 9100.0,
+      "merchant_category": "Wire Transfer",
+      "merchant_city": "Miami",
+      "merchant_country": "US",
+      "channel": "online",
+      "timestamp": "2026-03-17T14:55:08Z",
+      "verdict": "ESCALATED",
+      "cosine_similarity": 0.88
+    },
+    {
+      "transaction_id": "txn-hist-003",
+      "user_id": "user-456",
+      "amount": 4500.0,
+      "merchant_category": "Wire Transfer",
+      "merchant_city": "New York",
+      "merchant_country": "US",
+      "channel": "online",
+      "timestamp": "2026-02-28T16:30:45Z",
+      "verdict": "APPROVED",
+      "cosine_similarity": 0.74
+    }
+  ],
+  "escalation_context": "Escalated from Sentinel: cosine similarity 0.62, below threshold. Amount $9,200 is near CTR reporting threshold ($10,000). Third wire transfer to Miami in 3 weeks. AML structural signal detected."
+}

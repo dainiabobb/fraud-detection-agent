@@ -1,0 +1,7 @@
+pytest
+pytest-asyncio
+moto[all]
+boto3-stubs
+black
+ruff
+mypy
